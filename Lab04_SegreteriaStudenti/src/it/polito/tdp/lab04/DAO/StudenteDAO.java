@@ -1,11 +1,9 @@
 package it.polito.tdp.lab04.DAO;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -117,6 +115,41 @@ public class StudenteDAO {
 		
 		
 	}
+	
+	/**
+	 *Controllo se uno studente (matricola) é memorizzato nel database
+	 * 
+	 */
+	
+	public boolean isStudenteIscritto(Studente studente){
+		
+		String sql = "SELECT * " +
+                     " FROM studente " + 
+	                 " WHERE matricola= ?";
+		
+		try {
+			
+			Connection conn = ConnectDB.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, studente.getMatricola());
+
+			ResultSet rs = st.executeQuery();
+
+			if (rs.next()) {
+				return true;
+
+			} else {
+				return false;
+			}
+
+		} catch (SQLException e) {
+			
+			throw new RuntimeException("Errore Db");
+		}
+		
+	}
+	
+	
 
 
 }

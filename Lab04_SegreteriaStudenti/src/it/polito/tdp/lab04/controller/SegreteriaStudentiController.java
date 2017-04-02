@@ -1,6 +1,5 @@
 package it.polito.tdp.lab04.controller;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -109,15 +108,20 @@ public class SegreteriaStudentiController {
 		
 		Corso corso = this.comboCorso.getValue();
 		
-		List<Studente> studenti = model.getStudentiIscrittiAlCorso(corso.getCodins());
-		
-		if(corso == null || corso.equals(new Corso(null, 0, null, 0)))
+		if(corso == null || corso.equals(new Corso(null, 0, null, 0))){
+			
 			this.txtResult.setText("Corso non scelto!");
+			return;
+		}
 		else{
 			
+			List<Studente> studenti = model.getStudentiIscrittiAlCorso(corso.getCodins());
+			txtResult.clear();
+			
 			for(Studente s: studenti)
-				
 				txtResult.appendText(s.getMatricola() + " " + s.getNome() + " " + s.getCognome() + "\n");
+			
+			return;
 		}
 		
 
@@ -126,23 +130,47 @@ public class SegreteriaStudentiController {
 	@FXML
 	void doCercaCorsi(ActionEvent event) {
 		
+		txtResult.clear();
 		
+	try{	
+		// Seleziono il corso
+		Corso corso = this.comboCorso.getValue();
 		
-		
+		// seleziono la matricola
 		int matricola = Integer.parseInt(this.txtMatricola.getText());
 		
 		List<Corso> corsi = model.getCorsiDelloStudente(matricola);
 		
-		if(matricola == 0)
-			this.txtResult.setText("Matricola non presente");
-		else{
+		
+		if(corso == null || corso.equals(new Corso(null, 0, null, 0))){
 			
-			for(Corso c: corsi)
+			if(model.isStudenteIscritto(matricola) == false){
+				this.txtResult.setText("Matricola non presente");
+				return;
 				
-				txtResult.appendText(c.getCodins() + " " + c.getCrediti() + " " + c.getNome() + " " + c.getPd() + "\n");
+				} else{
+					for(Corso c: corsi)
+						txtResult.appendText(c.getCodins() + " " + c.getCrediti() + " " + c.getNome() + " " + c.getPd() + "\n");
+					
+					return;
+					}
+			
+		} else if(corsi.contains(corso)){
+			txtResult.setText("Lo studente é inscritto al corso selezionato! \n");
+			return;
+			
+		} else{
+			txtResult.setText("Lo studente non é inscritto al corso selezionato! \n");
+			return;
 		}
 		
+	}catch (NumberFormatException e){
 		
+		txtResult.setText("Errore nell'inserimento della matricola");
+		return;
+	}
+	
+	
 
 	}
 

@@ -72,5 +72,21 @@ public class Model {
 		
 		
 	}
+	
+	/**
+	 * Ritorna TRUE se lo studente è iscritto al corso, FALSE altrimenti
+	 * @param corso
+	 * @param studente
+	 * @return
+	 */
+	
+	public boolean isStudenteIscritto(int matricola){
+		
+		Studente s = new Studente(matricola);
+		
+		
+		return studenteDao.isStudenteIscritto(s);
+		
+	}
 
 }
