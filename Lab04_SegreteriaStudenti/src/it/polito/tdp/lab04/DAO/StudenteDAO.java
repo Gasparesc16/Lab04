@@ -67,7 +67,7 @@ public class StudenteDAO {
 	 * In realtà controllo se il corso é presente oppure no con un boolean, ovvero gestisco l'errore!!!
 	 */
 	
-	public boolean getCorsiDelloStudente(Studente studente){
+	public void getCorsiDelloStudente(Studente studente){
 		
 		String sql = "SELECT * " +
                      " FROM iscrizione, corso " + 
@@ -76,9 +76,6 @@ public class StudenteDAO {
 		
 		List<Corso> corsi = new LinkedList<Corso>();
 		
-		boolean valoreCorso = false;
-	
-	
 	try {
 		
 		Connection conn = ConnectDB.getConnection();
@@ -93,63 +90,17 @@ public class StudenteDAO {
 		ResultSet res = st.executeQuery();
 		
 		
-		while(res.next()){
-			
-			valoreCorso = true;
-			
-			Corso c = new Corso( res.getString("codins"), res.getInt("crediti"), res.getString("nome"), res.getInt("pd") ) ;
-			corsi.add(c);
-			
-			
-			}
+		while(res.next())
+			corsi.add(new Corso( res.getString("codins"), res.getInt("crediti"), res.getString("nome"), res.getInt("pd") ));
 		
 		studente.setCorsi(corsi);
 		
 	} catch (SQLException e) {
 
 		throw new RuntimeException("Errore Db");
-	}
-	
-	return valoreCorso;
-		
-		
+	}	
 		
 	}
-	
-	/**
-	 *Controllo se uno studente (matricola) é memorizzato nel database
-	 * 
-	 */
-	
-	public boolean isStudenteIscritto(Studente studente){
-		
-		String sql = "SELECT * " +
-                     " FROM studente " + 
-	                 " WHERE matricola= ?";
-		
-		try {
-			
-			Connection conn = ConnectDB.getConnection();
-			PreparedStatement st = conn.prepareStatement(sql);
-			st.setInt(1, studente.getMatricola());
-
-			ResultSet rs = st.executeQuery();
-
-			if (rs.next()) {
-				return true;
-
-			} else {
-				return false;
-			}
-
-		} catch (SQLException e) {
-			
-			throw new RuntimeException("Errore Db");
-		}
-		
-	}
-	
-	
 
 
 }

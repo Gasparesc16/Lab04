@@ -20,16 +20,13 @@ public class Model {
 
 	public List<Corso> getTuttiICorsi() {
 		
-		
 		return corsoDao.getTuttiICorsi();
-		
 		
 	}
 	
 	public Studente getStudent(int matricola){
 		
-		
-		Studente s = new Studente(matricola, null,null,null);
+		Studente s = new Studente(matricola);
 		
 		if(studenteDao.getStudent(s))
 			return s;
@@ -47,13 +44,10 @@ public class Model {
 	
 	public List<Studente> getStudentiIscrittiAlCorso(String codins) {
 		
-		
 		Corso corso = new Corso(codins);
 		corsoDao.getStudentiIscrittiAlCorso(corso);
 		
-		return corso.getStudenti();
-		
-		
+		return corso.getStudenti();	
 	}
 	
 	/**
@@ -73,20 +67,15 @@ public class Model {
 		
 	}
 	
-	/**
-	 * Ritorna TRUE se lo studente è iscritto al corso, FALSE altrimenti
-	 * @param corso
-	 * @param studente
-	 * @return
+	/*
+	 * Iscrive una studente ad un corso. Ritorna TRUE se l'operazione va a buon
+	 * fine.
 	 */
-	
-	public boolean isStudenteIscritto(int matricola){
-		
-		Studente s = new Studente(matricola);
-		
-		
-		return studenteDao.isStudenteIscritto(s);
-		
+	public boolean inscriviStudenteACorso(int matricola, String codins) {
+
+		Studente studente = new Studente(matricola);
+		Corso corso = new Corso(codins);
+		return corsoDao.inscriviStudenteACorso(studente, corso);
 	}
 
 }

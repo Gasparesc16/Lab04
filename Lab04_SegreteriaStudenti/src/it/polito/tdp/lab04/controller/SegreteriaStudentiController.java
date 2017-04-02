@@ -90,16 +90,10 @@ public class SegreteriaStudentiController {
 		
 		this.txtNome.setText(s.getNome());
 		this.txtCognome.setText(s.getCognome());
+		
 		} catch (RuntimeException e){
-			
-			txtResult.setText("ERRORE DI CONNESSIONE AL DATABASE!");
-
+			txtResult.setText("Errore nell'inserimento della matricola!");
 		}
-			
-			
-		
-		
-
 	}
 
 	@FXML
@@ -115,7 +109,8 @@ public class SegreteriaStudentiController {
 		}
 		else{
 			
-			List<Studente> studenti = model.getStudentiIscrittiAlCorso(corso.getCodins());
+			List<Studente> studenti = model.getStudentiIscrittiAlCorso( corso.getCodins() );
+			
 			txtResult.clear();
 			
 			for(Studente s: studenti)
@@ -144,7 +139,7 @@ public class SegreteriaStudentiController {
 		
 		if(corso == null || corso.equals(new Corso(null, 0, null, 0))){
 			
-			if(model.isStudenteIscritto(matricola) == false){
+			if(model.getStudent(matricola) == null){
 				this.txtResult.setText("Matricola non presente");
 				return;
 				
@@ -157,6 +152,10 @@ public class SegreteriaStudentiController {
 			
 		} else if(corsi.contains(corso)){
 			txtResult.setText("Lo studente é inscritto al corso selezionato! \n");
+			return;
+		
+		} else if(corso.getStudenti().size() == 0){
+			txtResult.setText("Il corso selezionato non ha nessun iscritto! \n");
 			return;
 			
 		} else{
@@ -176,6 +175,46 @@ public class SegreteriaStudentiController {
 
 	@FXML
 	void doIscrivi(ActionEvent event) {
+		
+		try{
+			
+			Corso corso = comboCorso.getValue();
+			
+			if(corso == null || corso.equals(new Corso(null, 0, null, 0))){
+				
+				this.txtResult.setText("Corso non scelto!");
+				return;
+			}
+			
+			// seleziono la matricola
+			int matricola = Integer.parseInt(this.txtMatricola.getText());
+			
+			if(model.getStudent(matricola) == null){
+				
+				// Iscrivo lo studente al corso -- controllo che l'inserimento
+				// vada a buon fine.
+				if (!model.inscriviStudenteACorso(matricola, corso.getCodins())) {
+					txtResult.appendText("Errore inserimento dati");
+					
+				} else {
+					txtResult.appendText("Studente iscritto al corso!");
+				}
+				
+				return;
+				
+				} else{
+					
+					this.txtResult.setText("La matricola inserita é già esistente!");
+					return;
+					}
+			
+		}catch (NumberFormatException e){
+			txtResult.setText("Errore nell'inserimento della matricola");
+			return;
+			
+		}
+		
+		
 
 	}
 
@@ -192,6 +231,6 @@ public class SegreteriaStudentiController {
 		assert txtMatricola != null : "fx:id=\"txtMatricola\" was not injected: check your FXML file 'SegreteriaStudenti.fxml'.";
 		assert btnReset != null : "fx:id=\"btnReset\" was not injected: check your FXML file 'SegreteriaStudenti.fxml'.";
 		
-			}
+	}
 
 }

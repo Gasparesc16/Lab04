@@ -65,9 +65,9 @@ public class CorsoDAO {
 	 */
 	public void getStudentiIscrittiAlCorso(Corso corso) {
 		
-		final String sql = "SELECT * " +
-                           " FROM iscrizione, studente " + 
-		                   " WHERE iscrizione.matricola=studente.matricola AND codins=?";  
+		String sql = "SELECT * " +
+                     " FROM iscrizione, studente " + 
+		             " WHERE iscrizione.matricola=studente.matricola AND codins=?";  
 				
 		List<Studente> studentiIscrittiAlCorso = new ArrayList<Studente>();
 
@@ -103,8 +103,27 @@ public class CorsoDAO {
 	 */
 	public boolean inscriviStudenteACorso(Studente studente, Corso corso) {
 		
-		
-		
-		return false;
+		String sql = "INSERT INTO iscritticorsi.iscrizione (matricola, codins) "+ 
+		             "VALUES matricola=?, codins= ? ";
+
+		try {
+			Connection conn = ConnectDB.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			
+			st.setInt(1, studente.getMatricola());
+			st.setString(2, corso.getCodins());
+			
+			int res = st.executeUpdate(sql);
+
+			if (res == 1)
+				return true;
+			else
+				return false;
+
+		} catch (SQLException e) {
+			// e.printStackTrace();
+			throw new RuntimeException("Errore Db");
+		}
+	
 	}
 }
