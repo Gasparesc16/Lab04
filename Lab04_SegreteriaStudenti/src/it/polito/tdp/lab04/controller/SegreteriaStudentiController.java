@@ -50,21 +50,76 @@ public class SegreteriaStudentiController {
 	private TextField txtCognome;
 
 	public void setModel(Model model) {
+		
+		this.model = model;
+		
+		this.comboCorso.getItems().add(new Corso(null, 0, null, 0));
+		
+		this.comboCorso.getItems().addAll(model.getTuttiICorsi());
+
 
 	}
 
 	@FXML
 	void doReset(ActionEvent event) {
+		
+		this.txtMatricola.clear();
+		this.txtNome.clear();
+		this.txtCognome.clear();
+		this.txtResult.clear();
 
 	}
 
 	@FXML
 	void doCercaNome(ActionEvent event) {
+		
+		txtResult.clear();
+		txtNome.clear();
+		txtCognome.clear();
+		
+		try{
+		
+		int matricola = Integer.parseInt(this.txtMatricola.getText());
+		
+		Studente s = model.getStudent(matricola);
+		
+		if(s == null){
+			txtResult.appendText(" Matricola non presente!");
+			return;
+		}
+			
+		
+		this.txtNome.setText(s.getNome());
+		this.txtCognome.setText(s.getCognome());
+		} catch (RuntimeException e){
+			
+			txtResult.setText("ERRORE DI CONNESSIONE AL DATABASE!");
+
+		}
+			
+			
+		
+		
 
 	}
 
 	@FXML
 	void doCercaIscrittiCorso(ActionEvent event) {
+		
+		
+		Corso corso = this.comboCorso.getValue();
+		
+		List<Studente> studenti = model.getStudentiIscrittiAlCorso(corso.getCodins());
+		
+		if(corso == null || corso.equals(new Corso(null, 0, null, 0)))
+			this.txtResult.setText("Corso non scelto!");
+		else{
+			
+			for(Studente s: studenti)
+				
+				txtResult.appendText(s.getMatricola() + " " + s.getNome() + " " + s.getCognome() + "\n");
+		}
+		
 
 	}
 
@@ -90,6 +145,7 @@ public class SegreteriaStudentiController {
 		assert btnIscrivi != null : "fx:id=\"btnIscrivi\" was not injected: check your FXML file 'SegreteriaStudenti.fxml'.";
 		assert txtMatricola != null : "fx:id=\"txtMatricola\" was not injected: check your FXML file 'SegreteriaStudenti.fxml'.";
 		assert btnReset != null : "fx:id=\"btnReset\" was not injected: check your FXML file 'SegreteriaStudenti.fxml'.";
-	}
+		
+			}
 
 }

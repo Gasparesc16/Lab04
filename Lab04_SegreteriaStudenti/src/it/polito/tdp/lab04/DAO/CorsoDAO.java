@@ -11,6 +11,7 @@ import java.util.List;
 import it.polito.tdp.lab04.model.Corso;
 import it.polito.tdp.lab04.model.Studente;
 
+
 public class CorsoDAO {
 
 	/*
@@ -32,12 +33,17 @@ public class CorsoDAO {
 
 				// Crea un nuovo JAVA Bean Corso
 				// Aggiungi il nuovo Corso alla lista
+				
+				Corso c = new Corso( rs.getString("codins"), rs.getInt("crediti"), rs.getString("nome"), rs.getInt("pd") ) ;
+				
+				corsi.add(c);
+				
 			}
 
 			return corsi;
 
 		} catch (SQLException e) {
-			// e.printStackTrace();
+			
 			throw new RuntimeException("Errore Db");
 		}
 	}
@@ -46,14 +52,49 @@ public class CorsoDAO {
 	 * Dato un codice insegnamento, ottengo il corso
 	 */
 	public void getCorso(Corso corso) {
-		// TODO
+		
+		
+		
+		
+		
+		
 	}
 
 	/*
 	 * Ottengo tutti gli studenti iscritti al Corso
 	 */
 	public void getStudentiIscrittiAlCorso(Corso corso) {
-		// TODO
+		
+		final String sql = "SELECT * " +
+                           " FROM iscrizione, studente " + 
+		                   " WHERE iscrizione.matricola=studente.matricola AND codins=?";  
+				
+		List<Studente> studentiIscrittiAlCorso = new ArrayList<Studente>();
+
+		try {
+			Connection conn = ConnectDB.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			
+			
+			st.setString(1, corso.getCodins());
+
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				
+				studentiIscrittiAlCorso.add(new Studente(rs.getInt("matricola"), rs.getString("nome"), rs.getString("cognome"), rs.getString("cds")));
+				
+			}
+			
+			corso.setStudenti(studentiIscrittiAlCorso);
+
+		} catch (SQLException e) {
+			
+			throw new RuntimeException("Errore Db");
+		}
+		
+		
+		
 	}
 
 	/*
@@ -61,7 +102,9 @@ public class CorsoDAO {
 	 * iscrivi lo studente al corso.
 	 */
 	public boolean inscriviStudenteACorso(Studente studente, Corso corso) {
-		// TODO
+		
+		
+		
 		return false;
 	}
 }
