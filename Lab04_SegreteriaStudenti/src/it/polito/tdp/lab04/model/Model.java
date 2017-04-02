@@ -37,13 +37,38 @@ public class Model {
 			return null;
 	}
 	
+	/**
+	 * Questo é il metodo che richiama il controller, quindi dobbiamo passare come parametro il codice di un corso
+	 * 
+	 * @param codins
+	 * @return
+	 */
+	
 	
 	public List<Studente> getStudentiIscrittiAlCorso(String codins) {
 		
 		
 		Corso corso = new Corso(codins);
 		corsoDao.getStudentiIscrittiAlCorso(corso);
+		
 		return corso.getStudenti();
+		
+		
+	}
+	
+	/**
+	 * Questo é il metodo che richiama il controller, quindi dobbiamo passare come parametro la matricola di uno studente
+	 * 
+	 * @param matricola
+	 * @return
+	 */
+	
+	public List<Corso> getCorsiDelloStudente(int matricola){
+		
+		Studente s = new Studente(matricola);
+		studenteDao.getCorsiDelloStudente(s);
+		
+		return s.getCorsi();
 		
 		
 	}

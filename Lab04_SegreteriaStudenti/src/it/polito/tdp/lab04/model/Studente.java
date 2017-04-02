@@ -1,7 +1,11 @@
 package it.polito.tdp.lab04.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Studente {
 	
+	private List<Corso> corsi;
 	private int matricola;
 	private String cognome;
 	private String nome;
@@ -74,6 +78,17 @@ public class Studente {
 	 */
 	public void setCds(String cds) {
 		this.cds = cds;
+	}
+	
+	public List<Corso> getCorsi() {
+		if (corsi == null) {
+			return new ArrayList<Corso>();
+		}
+		return corsi;
+	}
+
+	public void setCorsi(List<Corso> corsi) {
+		this.corsi = corsi;
 	}
 
 	/* (non-Javadoc)
